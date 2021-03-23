@@ -5,16 +5,21 @@ import { ENCODING, Inputs, Outputs, UNRELEASED } from "./constants";
 import Release from "./release";
 import ReleaseBody from "./releaseBody";
 
+function isTrue(value: string): boolean {
+    return !["no", "off", "false"].includes(value.toLowerCase());
+}
+
 async function run(): Promise<void> {
     try {
         const path = core.getInput(Inputs.Path) || "./CHANGELOG.md";
         const encoding = core.getInput(Inputs.Encoding) || ENCODING;
         const releaseName = core.getInput(Inputs.Release);
-        const saveChangelog = (core.getInput(Inputs.Save) || "true") === "true";
+        const saveChangelog = isTrue(core.getInput(Inputs.Save) || "true");
         const sectionSuffix = core.getInput(Inputs.SectionSuffix) || "";
         const setBody = core.getInput(Inputs.Set);
         const getRelease = core.getInput(Inputs.Get) || UNRELEASED;
         const appendBody = core.getInput(Inputs.Append);
+        const sanitize = isTrue(core.getInput(Inputs.Sanitize) || "false");
         const changeLog = ChangeLog.readOrCreate(path, encoding);
         let hasChanged = false;
         let release =
@@ -45,6 +50,9 @@ async function run(): Promise<void> {
             release.body = new ReleaseBody();
             release = newRelease;
             hasChanged = true;
+        }
+        if (sanitize) {
+            release.body.sanitize();
         }
         if (saveChangelog && hasChanged) {
             core.debug(`Saving changes to ${path}`);

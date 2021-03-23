@@ -321,17 +321,21 @@ const changelog_1 = __importDefault(__webpack_require__(361));
 const constants_1 = __webpack_require__(211);
 const release_1 = __importDefault(__webpack_require__(484));
 const releaseBody_1 = __importDefault(__webpack_require__(866));
+function isTrue(value) {
+    return !["no", "off", "false"].includes(value.toLowerCase());
+}
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const path = core.getInput(constants_1.Inputs.Path) || "./CHANGELOG.md";
             const encoding = core.getInput(constants_1.Inputs.Encoding) || constants_1.ENCODING;
             const releaseName = core.getInput(constants_1.Inputs.Release);
-            const saveChangelog = (core.getInput(constants_1.Inputs.Save) || "true") === "true";
+            const saveChangelog = isTrue(core.getInput(constants_1.Inputs.Save) || "true");
             const sectionSuffix = core.getInput(constants_1.Inputs.SectionSuffix) || "";
             const setBody = core.getInput(constants_1.Inputs.Set);
             const getRelease = core.getInput(constants_1.Inputs.Get) || constants_1.UNRELEASED;
             const appendBody = core.getInput(constants_1.Inputs.Append);
+            const sanitize = isTrue(core.getInput(constants_1.Inputs.Sanitize) || "false");
             const changeLog = changelog_1.default.readOrCreate(path, encoding);
             let hasChanged = false;
             let release = changeLog.getRelease(getRelease) || new release_1.default(getRelease);
@@ -357,6 +361,9 @@ function run() {
                 release.body = new releaseBody_1.default();
                 release = newRelease;
                 hasChanged = true;
+            }
+            if (sanitize) {
+                release.body.sanitize();
             }
             if (saveChangelog && hasChanged) {
                 core.debug(`Saving changes to ${path}`);
