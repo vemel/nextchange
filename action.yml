@@ -1,0 +1,53 @@
+name: "Keep a Changelog"
+description: "Parse and update CHANGELOG.md"
+author: "Vlad Emelianov"
+inputs:
+  path:
+    description: Path to CHANGELOG.md
+    default: "./CHANGELOG.md"
+    required: false
+  get:
+    description: Get release by its version
+    default: Unreleased
+    required: false
+  release:
+    description: If provided, create a new release with given version from target release
+    default: ""
+    required: false
+  set:
+    description: Fully replace target release notes
+    default: ""
+    required: false
+  append:
+    description: Append new lines to target release notes
+    default: ""
+    required: false
+  suffix:
+    description: Add suffix to each section of set/append notes, good for pasting a link to PR
+    default: ""
+    required: false
+  save:
+    description: Whether to save changes back to CHANGELOG.md path
+    default: "true"
+    required: false
+  sanitize:
+    description: Keep only Keep a Changelog sections in release notes
+    default: "false"
+    required: false
+  encoding:
+    description: Encoding for CHANGELOG.md
+    default: "utf-8"
+    required: false
+outputs:
+  result:
+    description: Target Release notes
+  titles:
+    description: Comma-separated Keep a Changelog titles from release notes
+  label:
+    description: "Release label based on release notes: major, minor, or patch"
+runs:
+  using: "node12"
+  main: "dist/index.js"
+branding:
+  icon: "archive"
+  color: "gray-dark"
