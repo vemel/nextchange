@@ -27,9 +27,10 @@ export default class Release {
     }
 
     static parse(text: string): Release {
-        const [title, body] = text.split(/\r?\n/, 2);
+        const [title, ...bodyParts] = text.split(/\r?\n/);
+        const body = bodyParts.join("\n");
         const [version, createdAt] = Release.parseTitle(title);
-        return new Release(version, createdAt, ReleaseBody.parse(body || ""));
+        return new Release(version, createdAt, ReleaseBody.parse(body));
     }
 
     renderTitle(): string {

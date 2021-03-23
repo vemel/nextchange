@@ -6,9 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-- `version-path` input parameter
-- `encoding` input parameter
-- `result` input parameter
+- New feature
 
+## [1.2.3]
 ### Fixed
-- Patch/micro release bump
+- stuff

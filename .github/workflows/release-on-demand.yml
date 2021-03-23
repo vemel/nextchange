@@ -1,0 +1,80 @@
+name: Release new version
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Release version. Leave auto to get version from unreleased notes"
+        required: true
+        default: "auto"
+      is-prerelease:
+        description: "Create a Release Candidate for auto version: true or false"
+        required: true
+        default: "false"
+
+jobs:
+  release-new-version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: |
+          pip install logchange
+      - name: Get notes from CHANGELOG.md
+        id: changelog
+        run: |
+          NOTES=$(logchange get unreleased | logchange format)
+          NOTES="${NOTES//'%'/'%25'}"
+          NOTES="${NOTES//$'\n'/'%0A'}"
+          NOTES="${NOTES//$'\r'/'%0D'}"
+          echo "::set-output name=unreleased::${NOTES}"
+      - name: Get new auto version
+        id: auto-version
+        uses: vemel/nextversion@main
+        with:
+          version-path: ./package.json
+          release-notes: ${{ toJSON(steps.changelog.outputs.unreleased) }}
+          type: semver
+          prerelease: ${{ github.event.inputs.is-prerelease }}
+          prerelease-type: rc
+      - name: Get new version
+        id: version
+        uses: actions/github-script@v3
+        with:
+          result-encoding: string
+          script: |
+            const inputVersion = ${{ github.event.inputs.is-prerelease }};
+            if (inputVersion && inputVersion !== "auto") return inputVersion;
+            return ${{ toJSON(steps.auto-version.outputs.result) }};
+      - name: Update version
+        uses: vemel/nextversion@main
+        with:
+          version-path: ./package.json
+          type: semver
+          result: ${{ toJSON(steps.version.outputs.result) }}
+          update-path: |
+            ./package.json
+            ./README.md
+      - name: Update changelog
+        run: |
+          logchange release ${{ toJSON(steps.version.outputs.result) }}
+      - name: Commit changes
+        run: |
+          VERSION=${{ toJSON(steps.version.outputs.result) }}
+          BRANCH="release/${{ steps.version.outputs.result }}"
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git checkout -b ${BRANCH}
+          git commit -am "Bump version to $VERSION"
+          git tag $VERSION
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: release/${{ steps.version.outputs.result }}
+          tags: true
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v3
+        with:
+          title: "Bump version to ${{ steps.version.outputs.result }}"
+          body: ${{ toJSON(steps.changelog.outputs.unreleased) }}

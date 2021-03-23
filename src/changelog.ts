@@ -50,7 +50,7 @@ export default class ChangeLog {
     }
 
     getRelease(version: string): Release | null {
-        if (version.toLowerCase() == "unreleased") return this.unreleased;
+        if (version.toLowerCase() === "unreleased") return this.unreleased;
         const found = this.releases.filter(x => x.version === version);
         if (found.length) return found[0];
         return null;
