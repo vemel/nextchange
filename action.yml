@@ -1,4 +1,4 @@
-name: "Keep a Changelog"
+name: "Next Release"
 description: "Parse and update CHANGELOG.md"
 author: "Vlad Emelianov"
 inputs:

@@ -1,8 +1,8 @@
-# Keep a Changelog action
+# Next Release
 
-Parse and update CHANGELOG.md
+Parse and update CHANGELOG.md action
 
-- [Keep a Changelog action](#keep-a-changelog-action)
+- [Next Release](#next-release)
   - [Usage](#usage)
     - [Pre-requisites](#pre-requisites)
     - [Inputs](#inputs)
