@@ -1,8 +1,8 @@
-# Next Release
+# Next Change
 
-Parse and update CHANGELOG.md action
+Parse and update `CHANGELOG.md` action
 
-- [Next Release](#next-release)
+- [Next Change](#next-change)
   - [Usage](#usage)
     - [Pre-requisites](#pre-requisites)
     - [Inputs](#inputs)
