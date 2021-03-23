@@ -5,7 +5,7 @@
   "description": "Parse and update CHANGELOG.md action",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc && ncc build -o dist src/index.ts && npm run uglify",
+    "build": "tsc && ncc build -o dist src/index.ts",
     "test": "jest",
     "test-cov": "jest --coverage",
     "lint": "eslint **/*.ts --cache",
@@ -15,27 +15,23 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/vemel/keepachangelog.git"
+    "url": "git+https://github.com/vemel/nextchange.git"
   },
   "keywords": [
     "actions",
     "node",
     "version",
-    "pep440",
-    "semver"
+    "keepachangelog",
+    "changelog"
   ],
   "author": "GitHub",
   "license": "MIT",
   "dependencies": {
-    "@actions/core": "^1.2.6",
-    "markdown": "^0.5.0",
-    "marked": "^2.0.1"
+    "@actions/core": "^1.2.6"
   },
   "devDependencies": {
     "@types/jest": "^26.0.21",
-    "@types/marked": "^2.0.0",
     "@types/node": "^12.20.6",
-    "@types/semver": "^7.3.4",
     "@typescript-eslint/eslint-plugin": "^4.18.0",
     "@typescript-eslint/parser": "^4.18.0",
     "@zeit/ncc": "^0.22.3",

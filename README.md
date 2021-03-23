@@ -44,7 +44,7 @@ Create a workflow `.yml` file in your repositories `.github/workflows` directory
 
 
 ## Contributing
-I would love for you to contribute to `actions/keepachangelog`, pull requests are welcome! Please see the [CONTRIBUTING.md](CONTRIBUTING.md) for more information.
+I would love for you to contribute to `actions/nextchange`, pull requests are welcome! Please see the [CONTRIBUTING.md](CONTRIBUTING.md) for more information.
 
 ## License
 The scripts and documentation in this project are released under the [MIT License](LICENSE)
