@@ -1,5 +1,5 @@
 {
-  "name": "@actions/nextrelease",
+  "name": "@actions/nextchange",
   "version": "0.0.1",
   "private": false,
   "description": "Parse and update CHANGELOG.md action",
