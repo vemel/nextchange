@@ -27,9 +27,7 @@ async function run(): Promise<void> {
         core.debug(`Target release is ${release.version}`);
         if (setBody) {
             core.debug(`Replacing notes in ${release.version}`);
-            release.body = ReleaseBody.parse(setBody).addSectionSuffix(
-                sectionSuffix
-            );
+            release.body = ReleaseBody.parse(setBody);
             hasChanged = true;
         }
         if (appendBody) {

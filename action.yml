@@ -23,7 +23,7 @@ inputs:
     default: ""
     required: false
   suffix:
-    description: Add suffix to each section of set/append notes, good for pasting a link to PR
+    description: Add suffix to each section of append notes, good for pasting a link to PR
     default: ""
     required: false
   save:

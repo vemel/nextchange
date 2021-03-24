@@ -589,7 +589,7 @@ function run() {
             core.debug(`Target release is ${release.version}`);
             if (setBody) {
                 core.debug(`Replacing notes in ${release.version}`);
-                release.body = releaseBody_1.default.parse(setBody).addSectionSuffix(sectionSuffix);
+                release.body = releaseBody_1.default.parse(setBody);
                 hasChanged = true;
             }
             if (appendBody) {

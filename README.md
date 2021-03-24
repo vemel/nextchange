@@ -23,9 +23,9 @@ Create a workflow `.yml` file in your repositories `.github/workflows` directory
 | `release` | `""` | If provided, create a new release with given version from target release |
 | `set` | `""` | Fully replace target release notes |
 | `append` | `""` | Append new lines to target release notes |
-| `suffix` | `""` | Add suffix to each section of `set`/`append` notes, good for pasting a link to PR |
-| `save` | `"true"` | Whether to save changes back to `CHANGELOG.md` path |
-| `sanitize` | `"false"` | Keep only `Keep a Changelog` sections in release notes |
+| `suffix` | `""` | Add suffix to each section of `append` notes, good for pasting a link to PR |
+| `save` | `true` | Whether to save changes back to `CHANGELOG.md` path |
+| `sanitize` | `false` | Keep only `Keep a Changelog` sections in release notes |
 | `encoding` | `"utf-8"` | Encoding for `CHANGELOG.md` |
 
 ### Outputs
