@@ -45,3 +45,25 @@ test("get label", () => {
     ).toBe("major");
     expect(ReleaseBody.parse("### fixed\n\nfixed2").getLabel()).toBe("patch");
 });
+
+test("add section suffix", () => {
+    expect(ReleaseBody.parse("").addSectionSuffix(" suffix").render()).toBe("");
+    expect(
+        ReleaseBody.parse(
+            "prefix\n\n\n### Added\ntest\nadded2\n\n### Removed\n-removed\n##Notes\npostfix"
+        )
+            .addSectionSuffix(" suffix")
+            .render()
+    ).toBe(
+        "prefix\n\n### Added\ntest\nadded2 suffix\n\n### Removed\n-removed suffix\n\n##Notes\npostfix"
+    );
+    expect(
+        ReleaseBody.parse(
+            "prefix\n\n\n### Added\ntest\nadded2\n\n### Removed\n-removed\n##Notes\npostfix"
+        )
+            .addSectionSuffix("suffix")
+            .render()
+    ).toBe(
+        "prefix\n\n### Added\ntest\nadded2 suffix\n\n### Removed\n-removed suffix\n\n##Notes\npostfix"
+    );
+});

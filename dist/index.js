@@ -594,6 +594,9 @@ function run() {
             }
             if (appendBody) {
                 core.debug(`Updating notes in ${release.version}`);
+                if (sectionSuffix) {
+                    core.debug(`Adding suffix: ${sectionSuffix}`);
+                }
                 release.body.merge(releaseBody_1.default.parse(appendBody)
                     .sanitize()
                     .addSectionSuffix(sectionSuffix));
@@ -784,6 +787,8 @@ class ReleaseBody {
     addSectionSuffix(suffix) {
         if (!suffix)
             return this;
+        if (!suffix.startsWith(" "))
+            suffix = ` ${suffix}`;
         this.getExistingSections().forEach(section => section.append(suffix));
         return this;
     }

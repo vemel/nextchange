@@ -32,6 +32,9 @@ async function run(): Promise<void> {
         }
         if (appendBody) {
             core.debug(`Updating notes in ${release.version}`);
+            if (sectionSuffix) {
+                core.debug(`Adding suffix: ${sectionSuffix}`);
+            }
             release.body.merge(
                 ReleaseBody.parse(appendBody)
                     .sanitize()

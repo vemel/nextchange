@@ -114,6 +114,7 @@ export default class ReleaseBody {
 
     addSectionSuffix(suffix: string): ReleaseBody {
         if (!suffix) return this;
+        if (!suffix.startsWith(" ")) suffix = ` ${suffix}`;
         this.getExistingSections().forEach(section => section.append(suffix));
         return this;
     }
