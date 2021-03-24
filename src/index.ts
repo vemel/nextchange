@@ -6,7 +6,7 @@ import Release from "./release";
 import ReleaseBody from "./releaseBody";
 
 function isTrue(value: string): boolean {
-    return !["no", "off", "false"].includes(value.toLowerCase());
+    return !["no", "off", "false", false].includes(value.toLowerCase());
 }
 
 async function run(): Promise<void> {

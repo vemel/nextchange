@@ -1,478 +1,11 @@
 module.exports =
-/******/ (function(modules, runtime) { // webpackBootstrap
+/******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		var threw = true;
-/******/ 		try {
-/******/ 			modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/ 			threw = false;
-/******/ 		} finally {
-/******/ 			if(threw) delete installedModules[moduleId];
-/******/ 		}
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	__webpack_require__.ab = __dirname + "/";
-/******/
-/******/ 	// the startup function
-/******/ 	function startup() {
-/******/ 		// Load entry module and return exports
-/******/ 		return __webpack_require__(325);
-/******/ 	};
-/******/
-/******/ 	// run startup
-/******/ 	return startup();
-/******/ })
-/************************************************************************/
-/******/ ({
+/******/ 	var __webpack_modules__ = ({
 
-/***/ 82:
-/***/ (function(__unusedmodule, exports) {
+/***/ 351:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
-"use strict";
-
-// We use any as a valid input type
-/* eslint-disable @typescript-eslint/no-explicit-any */
-Object.defineProperty(exports, "__esModule", { value: true });
-/**
- * Sanitizes an input into a string so it can be passed into issueCommand safely
- * @param input input to sanitize into a string
- */
-function toCommandValue(input) {
-    if (input === null || input === undefined) {
-        return '';
-    }
-    else if (typeof input === 'string' || input instanceof String) {
-        return input;
-    }
-    return JSON.stringify(input);
-}
-exports.toCommandValue = toCommandValue;
-//# sourceMappingURL=utils.js.map
-
-/***/ }),
-
-/***/ 87:
-/***/ (function(module) {
-
-module.exports = require("os");
-
-/***/ }),
-
-/***/ 102:
-/***/ (function(__unusedmodule, exports, __webpack_require__) {
-
-"use strict";
-
-// For internal use, subject to change.
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-// We use any as a valid input type
-/* eslint-disable @typescript-eslint/no-explicit-any */
-const fs = __importStar(__webpack_require__(747));
-const os = __importStar(__webpack_require__(87));
-const utils_1 = __webpack_require__(82);
-function issueCommand(command, message) {
-    const filePath = process.env[`GITHUB_${command}`];
-    if (!filePath) {
-        throw new Error(`Unable to find environment variable for file command ${command}`);
-    }
-    if (!fs.existsSync(filePath)) {
-        throw new Error(`Missing file at path: ${filePath}`);
-    }
-    fs.appendFileSync(filePath, `${utils_1.toCommandValue(message)}${os.EOL}`, {
-        encoding: 'utf8'
-    });
-}
-exports.issueCommand = issueCommand;
-//# sourceMappingURL=file-command.js.map
-
-/***/ }),
-
-/***/ 163:
-/***/ (function(__unusedmodule, exports) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.joinText = exports.trimDedent = exports.dedent = exports.trimLines = void 0;
-function trimLines(text) {
-    const lines = [];
-    for (let line of text.split(/\r?\n/)) {
-        line = line.trimRight();
-        if (!line.length && !lines.length)
-            continue;
-        lines.push(line);
-    }
-    while (lines.length && lines[lines.length - 1].trim().length === 0)
-        lines.pop();
-    return lines.join("\n");
-}
-exports.trimLines = trimLines;
-function dedent(text) {
-    let offset = -1;
-    let firstLine = true;
-    const lines = text.split(/\r?\n/);
-    for (const line of lines) {
-        const lineOffset = line.length - line.trimLeft().length;
-        if (firstLine) {
-            if (lineOffset)
-                offset = lineOffset;
-            firstLine = false;
-            continue;
-        }
-        if (offset < 0) {
-            offset = lineOffset;
-            continue;
-        }
-        if (offset > lineOffset)
-            offset = lineOffset;
-    }
-    if (offset <= 0)
-        return text;
-    if (lines.length && lines[0].length === lines[0].trimLeft().length) {
-        lines[0] = new Array(offset).fill(" ").join("") + lines[0];
-    }
-    return lines.map(line => line.substr(offset)).join("\n");
-}
-exports.dedent = dedent;
-function trimDedent(text) {
-    return dedent(trimLines(text));
-}
-exports.trimDedent = trimDedent;
-function joinText(sep, ...texts) {
-    return texts
-        .map(x => trimDedent(x))
-        .filter(x => x)
-        .join(sep);
-}
-exports.joinText = joinText;
-
-
-/***/ }),
-
-/***/ 211:
-/***/ (function(__unusedmodule, exports) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.ENCODING = exports.HEADER = exports.UNRELEASED = exports.SECTION_TITLES = exports.Labels = exports.SectionTitles = exports.Outputs = exports.Inputs = void 0;
-var Inputs;
-(function (Inputs) {
-    Inputs["Path"] = "path";
-    Inputs["Encoding"] = "encoding";
-    Inputs["Release"] = "release";
-    Inputs["Get"] = "get";
-    Inputs["Set"] = "set";
-    Inputs["Append"] = "append";
-    Inputs["SectionSuffix"] = "suffix";
-    Inputs["Save"] = "save";
-    Inputs["Sanitize"] = "sanitize";
-})(Inputs = exports.Inputs || (exports.Inputs = {}));
-var Outputs;
-(function (Outputs) {
-    Outputs["Titles"] = "titles";
-    Outputs["Label"] = "label";
-    Outputs["Result"] = "result";
-})(Outputs = exports.Outputs || (exports.Outputs = {}));
-var SectionTitles;
-(function (SectionTitles) {
-    SectionTitles["Added"] = "added";
-    SectionTitles["Changed"] = "changed";
-    SectionTitles["Deprecated"] = "deprecated";
-    SectionTitles["Removed"] = "removed";
-    SectionTitles["Fixed"] = "fixed";
-    SectionTitles["Security"] = "security";
-})(SectionTitles = exports.SectionTitles || (exports.SectionTitles = {}));
-var Labels;
-(function (Labels) {
-    Labels["Major"] = "major";
-    Labels["Minor"] = "minor";
-    Labels["Patch"] = "patch";
-})(Labels = exports.Labels || (exports.Labels = {}));
-exports.SECTION_TITLES = Object.values(SectionTitles);
-exports.UNRELEASED = "unreleased";
-exports.HEADER = `# Changelog
-All notable changes to this project will be documented in this file.
-
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).`;
-exports.ENCODING = "utf-8";
-
-
-/***/ }),
-
-/***/ 312:
-/***/ (function(__unusedmodule, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-const constants_1 = __webpack_require__(211);
-const utils_1 = __webpack_require__(163);
-class Section {
-    constructor(title, body = "") {
-        this.title = title.toLowerCase();
-        this.body = utils_1.trimDedent(body);
-    }
-    static isValidTitle(title) {
-        const titles = Object.values(constants_1.SectionTitles);
-        return titles.includes(title.toLowerCase());
-    }
-    renderTitle() {
-        return `### ${this.title[0].toUpperCase()}${this.title.substr(1)}`;
-    }
-    render() {
-        if (this.body) {
-            return `${this.renderTitle()}\n${this.body}`;
-        }
-        return this.renderTitle();
-    }
-    isEmpty() {
-        return this.body.length === 0;
-    }
-    append(text) {
-        this.body = `${this.body}${text}`;
-        return this;
-    }
-    appendLines(text) {
-        this.body = utils_1.joinText("\n", this.body, text);
-        return this;
-    }
-    set(text) {
-        this.body = utils_1.trimDedent(text);
-        return this;
-    }
-}
-exports.default = Section;
-
-
-/***/ }),
-
-/***/ 325:
-/***/ (function(__unusedmodule, exports, __webpack_require__) {
-
-"use strict";
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const core = __importStar(__webpack_require__(470));
-const changelog_1 = __importDefault(__webpack_require__(361));
-const constants_1 = __webpack_require__(211);
-const release_1 = __importDefault(__webpack_require__(484));
-const releaseBody_1 = __importDefault(__webpack_require__(866));
-function isTrue(value) {
-    return !["no", "off", "false"].includes(value.toLowerCase());
-}
-function run() {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            const path = core.getInput(constants_1.Inputs.Path) || "./CHANGELOG.md";
-            const encoding = core.getInput(constants_1.Inputs.Encoding) || constants_1.ENCODING;
-            const releaseName = core.getInput(constants_1.Inputs.Release);
-            const saveChangelog = isTrue(core.getInput(constants_1.Inputs.Save) || "true");
-            const sectionSuffix = core.getInput(constants_1.Inputs.SectionSuffix) || "";
-            const setBody = core.getInput(constants_1.Inputs.Set);
-            const getRelease = core.getInput(constants_1.Inputs.Get) || constants_1.UNRELEASED;
-            const appendBody = core.getInput(constants_1.Inputs.Append);
-            const sanitize = isTrue(core.getInput(constants_1.Inputs.Sanitize) || "false");
-            const changeLog = changelog_1.default.readOrCreate(path, encoding);
-            let hasChanged = false;
-            let release = changeLog.getRelease(getRelease) || new release_1.default(getRelease);
-            core.debug(`Target release is ${release.version}`);
-            if (setBody) {
-                core.debug(`Replacing notes in ${release.version}`);
-                release.body = releaseBody_1.default.parse(setBody).addSectionSuffix(sectionSuffix);
-                hasChanged = true;
-            }
-            if (appendBody) {
-                core.debug(`Updating notes in ${release.version}`);
-                release.body.merge(releaseBody_1.default.parse(appendBody)
-                    .sanitize()
-                    .addSectionSuffix(sectionSuffix));
-                hasChanged = true;
-                core.debug(`Updated notes in ${release.version}`);
-            }
-            if (releaseName) {
-                const newRelease = changeLog.getOrCreateRelease(releaseName);
-                core.debug(`Releasing ${newRelease.version}`);
-                newRelease.body = release.body;
-                core.debug(`Cleaning up ${release.version}`);
-                release.body = new releaseBody_1.default();
-                release = newRelease;
-                hasChanged = true;
-            }
-            if (sanitize) {
-                release.body.sanitize();
-            }
-            if (saveChangelog && hasChanged) {
-                core.debug(`Saving changes to ${path}`);
-                changeLog.write(path, encoding);
-            }
-            core.setOutput(constants_1.Outputs.Result, release.body.render());
-            core.setOutput(constants_1.Outputs.Label, release.body.getLabel());
-            core.setOutput(constants_1.Outputs.Titles, release.body.getTitles().join(","));
-        }
-        catch (error) {
-            core.setFailed(error.message);
-        }
-    });
-}
-run();
-exports.default = run;
-
-
-/***/ }),
-
-/***/ 361:
-/***/ (function(__unusedmodule, exports, __webpack_require__) {
-
-"use strict";
-
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const fs_1 = __importDefault(__webpack_require__(747));
-const constants_1 = __webpack_require__(211);
-const release_1 = __importDefault(__webpack_require__(484));
-const releaseBody_1 = __importDefault(__webpack_require__(866));
-const utils_1 = __webpack_require__(163);
-class ChangeLog {
-    constructor(header = "", unreleased = new release_1.default("Unreleased"), releases = []) {
-        this.header = header;
-        this.unreleased = unreleased;
-        this.releases = releases;
-        this.isCRLF = false;
-    }
-    static parse(text) {
-        const [header, ...sections] = text.split(/^## \[/m);
-        const releases = sections.map(x => release_1.default.parse(`## [${x}`));
-        const unreleasedItems = releases.filter(x => x.version.toLowerCase() === constants_1.UNRELEASED);
-        const released = releases.filter(x => x.version.toLowerCase() !== constants_1.UNRELEASED);
-        const unreleased = unreleasedItems.length
-            ? unreleasedItems[0]
-            : new release_1.default("Unreleased");
-        const result = new ChangeLog(utils_1.trimDedent(header), unreleased, released);
-        return result;
-    }
-    static read(path, encoding = constants_1.ENCODING) {
-        let text = fs_1.default.readFileSync(path, { encoding });
-        let isCRLF = false;
-        if (text.includes("\r\n")) {
-            text = text.replace(/\r?\n/g, "\n");
-            isCRLF = true;
-        }
-        const result = ChangeLog.parse(text);
-        result.isCRLF = isCRLF;
-        return result;
-    }
-    getRelease(version) {
-        if (version.toLowerCase() === "unreleased")
-            return this.unreleased;
-        const found = this.releases.filter(x => x.version === version);
-        if (found.length)
-            return found[0];
-        return null;
-    }
-    getOrCreateRelease(version) {
-        const release = this.getRelease(version);
-        if (release)
-            return release;
-        const newRelease = new release_1.default(version, "", new releaseBody_1.default());
-        this.releases = [newRelease, ...this.releases];
-        return newRelease;
-    }
-    renderReleases() {
-        return this.releases.map(x => x.render()).join("\n\n");
-    }
-    render() {
-        return [this.header, this.unreleased.render(), this.renderReleases()]
-            .filter(x => x)
-            .join("\n\n");
-    }
-    write(path, encoding = constants_1.ENCODING) {
-        let text = this.render();
-        if (this.isCRLF) {
-            text = text.replace(/\r?\n/g, "\r\n");
-        }
-        fs_1.default.writeFileSync(path, text, { encoding });
-    }
-    static readOrCreate(path, encoding = constants_1.ENCODING) {
-        if (!fs_1.default.existsSync(path))
-            return new ChangeLog(constants_1.HEADER);
-        return ChangeLog.read(path, encoding);
-    }
-}
-exports.default = ChangeLog;
-
-
-/***/ }),
-
-/***/ 431:
-/***/ (function(__unusedmodule, exports, __webpack_require__) {
-
-"use strict";
 
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
@@ -481,9 +14,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
     result["default"] = mod;
     return result;
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-const os = __importStar(__webpack_require__(87));
-const utils_1 = __webpack_require__(82);
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const os = __importStar(__nccwpck_require__(87));
+const utils_1 = __nccwpck_require__(278);
 /**
  * Commands
  *
@@ -555,10 +88,9 @@ function escapeProperty(s) {
 
 /***/ }),
 
-/***/ 470:
-/***/ (function(__unusedmodule, exports, __webpack_require__) {
+/***/ 186:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
-"use strict";
 
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -576,12 +108,12 @@ var __importStar = (this && this.__importStar) || function (mod) {
     result["default"] = mod;
     return result;
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-const command_1 = __webpack_require__(431);
-const file_command_1 = __webpack_require__(102);
-const utils_1 = __webpack_require__(82);
-const os = __importStar(__webpack_require__(87));
-const path = __importStar(__webpack_require__(622));
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const command_1 = __nccwpck_require__(351);
+const file_command_1 = __nccwpck_require__(717);
+const utils_1 = __nccwpck_require__(278);
+const os = __importStar(__nccwpck_require__(87));
+const path = __importStar(__nccwpck_require__(622));
 /**
  * The code to exit an action
  */
@@ -800,16 +332,314 @@ exports.getState = getState;
 
 /***/ }),
 
-/***/ 484:
-/***/ (function(__unusedmodule, exports, __webpack_require__) {
+/***/ 717:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
-"use strict";
+
+// For internal use, subject to change.
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+// We use any as a valid input type
+/* eslint-disable @typescript-eslint/no-explicit-any */
+const fs = __importStar(__nccwpck_require__(747));
+const os = __importStar(__nccwpck_require__(87));
+const utils_1 = __nccwpck_require__(278);
+function issueCommand(command, message) {
+    const filePath = process.env[`GITHUB_${command}`];
+    if (!filePath) {
+        throw new Error(`Unable to find environment variable for file command ${command}`);
+    }
+    if (!fs.existsSync(filePath)) {
+        throw new Error(`Missing file at path: ${filePath}`);
+    }
+    fs.appendFileSync(filePath, `${utils_1.toCommandValue(message)}${os.EOL}`, {
+        encoding: 'utf8'
+    });
+}
+exports.issueCommand = issueCommand;
+//# sourceMappingURL=file-command.js.map
+
+/***/ }),
+
+/***/ 278:
+/***/ ((__unused_webpack_module, exports) => {
+
+
+// We use any as a valid input type
+/* eslint-disable @typescript-eslint/no-explicit-any */
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+/**
+ * Sanitizes an input into a string so it can be passed into issueCommand safely
+ * @param input input to sanitize into a string
+ */
+function toCommandValue(input) {
+    if (input === null || input === undefined) {
+        return '';
+    }
+    else if (typeof input === 'string' || input instanceof String) {
+        return input;
+    }
+    return JSON.stringify(input);
+}
+exports.toCommandValue = toCommandValue;
+//# sourceMappingURL=utils.js.map
+
+/***/ }),
+
+/***/ 598:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
 
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-const releaseBody_1 = __importDefault(__webpack_require__(866));
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const fs_1 = __importDefault(__nccwpck_require__(747));
+const constants_1 = __nccwpck_require__(42);
+const release_1 = __importDefault(__nccwpck_require__(776));
+const releaseBody_1 = __importDefault(__nccwpck_require__(905));
+const utils_1 = __nccwpck_require__(314);
+class ChangeLog {
+    constructor(header = "", unreleased = new release_1.default("Unreleased"), releases = []) {
+        this.header = header;
+        this.unreleased = unreleased;
+        this.releases = releases;
+        this.isCRLF = false;
+    }
+    static parse(text) {
+        const [header, ...sections] = text.split(/^## \[/m);
+        const releases = sections.map(x => release_1.default.parse(`## [${x}`));
+        const unreleasedItems = releases.filter(x => x.version.toLowerCase() === constants_1.UNRELEASED);
+        const released = releases.filter(x => x.version.toLowerCase() !== constants_1.UNRELEASED);
+        const unreleased = unreleasedItems.length
+            ? unreleasedItems[0]
+            : new release_1.default("Unreleased");
+        const result = new ChangeLog(utils_1.trimDedent(header), unreleased, released);
+        return result;
+    }
+    static read(path, encoding = constants_1.ENCODING) {
+        let text = fs_1.default.readFileSync(path, { encoding });
+        let isCRLF = false;
+        if (text.includes("\r\n")) {
+            text = text.replace(/\r?\n/g, "\n");
+            isCRLF = true;
+        }
+        const result = ChangeLog.parse(text);
+        result.isCRLF = isCRLF;
+        return result;
+    }
+    getRelease(version) {
+        if (version.toLowerCase() === "unreleased")
+            return this.unreleased;
+        const found = this.releases.filter(x => x.version === version);
+        if (found.length)
+            return found[0];
+        return null;
+    }
+    getOrCreateRelease(version) {
+        const release = this.getRelease(version);
+        if (release)
+            return release;
+        const newRelease = new release_1.default(version, "", new releaseBody_1.default());
+        this.releases = [newRelease, ...this.releases];
+        return newRelease;
+    }
+    renderReleases() {
+        return this.releases.map(x => x.render()).join("\n\n");
+    }
+    render() {
+        return [this.header, this.unreleased.render(), this.renderReleases()]
+            .filter(x => x)
+            .join("\n\n");
+    }
+    write(path, encoding = constants_1.ENCODING) {
+        let text = this.render();
+        if (this.isCRLF) {
+            text = text.replace(/\r?\n/g, "\r\n");
+        }
+        fs_1.default.writeFileSync(path, text, { encoding });
+    }
+    static readOrCreate(path, encoding = constants_1.ENCODING) {
+        if (!fs_1.default.existsSync(path))
+            return new ChangeLog(constants_1.HEADER);
+        return ChangeLog.read(path, encoding);
+    }
+}
+exports.default = ChangeLog;
+
+
+/***/ }),
+
+/***/ 42:
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ENCODING = exports.HEADER = exports.UNRELEASED = exports.SECTION_TITLES = exports.Labels = exports.SectionTitles = exports.Outputs = exports.Inputs = void 0;
+var Inputs;
+(function (Inputs) {
+    Inputs["Path"] = "path";
+    Inputs["Encoding"] = "encoding";
+    Inputs["Release"] = "release";
+    Inputs["Get"] = "get";
+    Inputs["Set"] = "set";
+    Inputs["Append"] = "append";
+    Inputs["SectionSuffix"] = "suffix";
+    Inputs["Save"] = "save";
+    Inputs["Sanitize"] = "sanitize";
+})(Inputs = exports.Inputs || (exports.Inputs = {}));
+var Outputs;
+(function (Outputs) {
+    Outputs["Titles"] = "titles";
+    Outputs["Label"] = "label";
+    Outputs["Result"] = "result";
+})(Outputs = exports.Outputs || (exports.Outputs = {}));
+var SectionTitles;
+(function (SectionTitles) {
+    SectionTitles["Added"] = "added";
+    SectionTitles["Changed"] = "changed";
+    SectionTitles["Deprecated"] = "deprecated";
+    SectionTitles["Removed"] = "removed";
+    SectionTitles["Fixed"] = "fixed";
+    SectionTitles["Security"] = "security";
+})(SectionTitles = exports.SectionTitles || (exports.SectionTitles = {}));
+var Labels;
+(function (Labels) {
+    Labels["Major"] = "major";
+    Labels["Minor"] = "minor";
+    Labels["Patch"] = "patch";
+})(Labels = exports.Labels || (exports.Labels = {}));
+exports.SECTION_TITLES = Object.values(SectionTitles);
+exports.UNRELEASED = "unreleased";
+exports.HEADER = `# Changelog
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).`;
+exports.ENCODING = "utf-8";
+
+
+/***/ }),
+
+/***/ 144:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const core = __importStar(__nccwpck_require__(186));
+const changelog_1 = __importDefault(__nccwpck_require__(598));
+const constants_1 = __nccwpck_require__(42);
+const release_1 = __importDefault(__nccwpck_require__(776));
+const releaseBody_1 = __importDefault(__nccwpck_require__(905));
+function isTrue(value) {
+    return !["no", "off", "false", false].includes(value.toLowerCase());
+}
+function run() {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const path = core.getInput(constants_1.Inputs.Path) || "./CHANGELOG.md";
+            const encoding = core.getInput(constants_1.Inputs.Encoding) || constants_1.ENCODING;
+            const releaseName = core.getInput(constants_1.Inputs.Release);
+            const saveChangelog = isTrue(core.getInput(constants_1.Inputs.Save) || "true");
+            const sectionSuffix = core.getInput(constants_1.Inputs.SectionSuffix) || "";
+            const setBody = core.getInput(constants_1.Inputs.Set);
+            const getRelease = core.getInput(constants_1.Inputs.Get) || constants_1.UNRELEASED;
+            const appendBody = core.getInput(constants_1.Inputs.Append);
+            const sanitize = isTrue(core.getInput(constants_1.Inputs.Sanitize) || "false");
+            const changeLog = changelog_1.default.readOrCreate(path, encoding);
+            let hasChanged = false;
+            let release = changeLog.getRelease(getRelease) || new release_1.default(getRelease);
+            core.debug(`Target release is ${release.version}`);
+            if (setBody) {
+                core.debug(`Replacing notes in ${release.version}`);
+                release.body = releaseBody_1.default.parse(setBody).addSectionSuffix(sectionSuffix);
+                hasChanged = true;
+            }
+            if (appendBody) {
+                core.debug(`Updating notes in ${release.version}`);
+                release.body.merge(releaseBody_1.default.parse(appendBody)
+                    .sanitize()
+                    .addSectionSuffix(sectionSuffix));
+                hasChanged = true;
+                core.debug(`Updated notes in ${release.version}`);
+            }
+            if (releaseName) {
+                const newRelease = changeLog.getOrCreateRelease(releaseName);
+                core.debug(`Releasing ${newRelease.version}`);
+                newRelease.body = release.body;
+                core.debug(`Cleaning up ${release.version}`);
+                release.body = new releaseBody_1.default();
+                release = newRelease;
+                hasChanged = true;
+            }
+            if (sanitize) {
+                release.body.sanitize();
+            }
+            if (saveChangelog && hasChanged) {
+                core.debug(`Saving changes to ${path}`);
+                changeLog.write(path, encoding);
+            }
+            core.setOutput(constants_1.Outputs.Result, release.body.render());
+            core.setOutput(constants_1.Outputs.Label, release.body.getLabel());
+            core.setOutput(constants_1.Outputs.Titles, release.body.getTitles().join(","));
+        }
+        catch (error) {
+            core.setFailed(error.message);
+        }
+    });
+}
+run();
+exports.default = run;
+
+
+/***/ }),
+
+/***/ 776:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const releaseBody_1 = __importDefault(__nccwpck_require__(905));
 class Release {
     constructor(version, createdAt = "", body = null) {
         this.version = version;
@@ -851,32 +681,17 @@ exports.default = Release;
 
 /***/ }),
 
-/***/ 622:
-/***/ (function(module) {
+/***/ 905:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
-module.exports = require("path");
-
-/***/ }),
-
-/***/ 747:
-/***/ (function(module) {
-
-module.exports = require("fs");
-
-/***/ }),
-
-/***/ 866:
-/***/ (function(__unusedmodule, exports, __webpack_require__) {
-
-"use strict";
 
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-const constants_1 = __webpack_require__(211);
-const section_1 = __importDefault(__webpack_require__(312));
-const utils_1 = __webpack_require__(163);
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const constants_1 = __nccwpck_require__(42);
+const section_1 = __importDefault(__nccwpck_require__(382));
+const utils_1 = __nccwpck_require__(314);
 const RE_SECTION = /^### (\S+)/;
 class ReleaseBody {
     constructor(sections = [], prefix = "", postfix = "") {
@@ -976,6 +791,174 @@ class ReleaseBody {
 exports.default = ReleaseBody;
 
 
+/***/ }),
+
+/***/ 382:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const constants_1 = __nccwpck_require__(42);
+const utils_1 = __nccwpck_require__(314);
+class Section {
+    constructor(title, body = "") {
+        this.title = title.toLowerCase();
+        this.body = utils_1.trimDedent(body);
+    }
+    static isValidTitle(title) {
+        const titles = Object.values(constants_1.SectionTitles);
+        return titles.includes(title.toLowerCase());
+    }
+    renderTitle() {
+        return `### ${this.title[0].toUpperCase()}${this.title.substr(1)}`;
+    }
+    render() {
+        if (this.body) {
+            return `${this.renderTitle()}\n${this.body}`;
+        }
+        return this.renderTitle();
+    }
+    isEmpty() {
+        return this.body.length === 0;
+    }
+    append(text) {
+        this.body = `${this.body}${text}`;
+        return this;
+    }
+    appendLines(text) {
+        this.body = utils_1.joinText("\n", this.body, text);
+        return this;
+    }
+    set(text) {
+        this.body = utils_1.trimDedent(text);
+        return this;
+    }
+}
+exports.default = Section;
+
+
+/***/ }),
+
+/***/ 314:
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.joinText = exports.trimDedent = exports.dedent = exports.trimLines = void 0;
+function trimLines(text) {
+    const lines = [];
+    for (let line of text.split(/\r?\n/)) {
+        line = line.trimRight();
+        if (!line.length && !lines.length)
+            continue;
+        lines.push(line);
+    }
+    while (lines.length && lines[lines.length - 1].trim().length === 0)
+        lines.pop();
+    return lines.join("\n");
+}
+exports.trimLines = trimLines;
+function dedent(text) {
+    let offset = -1;
+    let firstLine = true;
+    const lines = text.split(/\r?\n/);
+    for (const line of lines) {
+        const lineOffset = line.length - line.trimLeft().length;
+        if (firstLine) {
+            if (lineOffset)
+                offset = lineOffset;
+            firstLine = false;
+            continue;
+        }
+        if (offset < 0) {
+            offset = lineOffset;
+            continue;
+        }
+        if (offset > lineOffset)
+            offset = lineOffset;
+    }
+    if (offset <= 0)
+        return text;
+    if (lines.length && lines[0].length === lines[0].trimLeft().length) {
+        lines[0] = new Array(offset).fill(" ").join("") + lines[0];
+    }
+    return lines.map(line => line.substr(offset)).join("\n");
+}
+exports.dedent = dedent;
+function trimDedent(text) {
+    return dedent(trimLines(text));
+}
+exports.trimDedent = trimDedent;
+function joinText(sep, ...texts) {
+    return texts
+        .map(x => trimDedent(x))
+        .filter(x => x)
+        .join(sep);
+}
+exports.joinText = joinText;
+
+
+/***/ }),
+
+/***/ 747:
+/***/ ((module) => {
+
+module.exports = require("fs");;
+
+/***/ }),
+
+/***/ 87:
+/***/ ((module) => {
+
+module.exports = require("os");;
+
+/***/ }),
+
+/***/ 622:
+/***/ ((module) => {
+
+module.exports = require("path");;
+
 /***/ })
 
-/******/ });
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __nccwpck_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		if(__webpack_module_cache__[moduleId]) {
+/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		var threw = true;
+/******/ 		try {
+/******/ 			__webpack_modules__[moduleId].call(module.exports, module, module.exports, __nccwpck_require__);
+/******/ 			threw = false;
+/******/ 		} finally {
+/******/ 			if(threw) delete __webpack_module_cache__[moduleId];
+/******/ 		}
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/compat */
+/******/ 	
+/******/ 	__nccwpck_require__.ab = __dirname + "/";/************************************************************************/
+/******/ 	// module exports must be returned from runtime so entry inlining is disabled
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	return __nccwpck_require__(144);
+/******/ })()
+;
