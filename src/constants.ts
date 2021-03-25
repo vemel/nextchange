@@ -7,7 +7,8 @@ export enum Inputs {
     Append = "append",
     SectionSuffix = "suffix",
     Save = "save",
-    Sanitize = "sanitize"
+    Sanitize = "sanitize",
+    Clear = "clear"
 }
 
 export enum Outputs {

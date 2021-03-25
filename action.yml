@@ -6,20 +6,24 @@ inputs:
     description: Path to CHANGELOG.md
     default: "./CHANGELOG.md"
     required: false
-  get:
-    description: Get release by its version
-    default: Unreleased
-    required: false
   release:
-    description: If provided, create a new release with given version from target release
+    description: Get or create a release to edit, set it as target
+    default: ""
+    required: false
+  clear:
+    description: Delete everything from target release notes if it exists and not empty
+    default: "false"
+    required: false
+  get:
+    description: Replace target release notes with notes of release provided here, e.g. Undefined
     default: ""
     required: false
   set:
-    description: Fully replace target release notes
+    description: Fully replace target release notes with parameter value
     default: ""
     required: false
   append:
-    description: Append new lines to target release notes
+    description: Append new lines to target release notes from parameter value
     default: ""
     required: false
   suffix:
@@ -31,7 +35,7 @@ inputs:
     default: "true"
     required: false
   sanitize:
-    description: Keep only Keep a Changelog sections in release notes
+    description: Keep only Keep a Changelog sections in target release notes
     default: "false"
     required: false
   encoding:

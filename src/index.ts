@@ -1,7 +1,7 @@
 import * as core from "@actions/core";
 
 import ChangeLog from "./changelog";
-import { ENCODING, Inputs, Outputs, UNRELEASED } from "./constants";
+import { ENCODING, Inputs, Outputs } from "./constants";
 import Release from "./release";
 import ReleaseBody from "./releaseBody";
 
@@ -17,18 +17,35 @@ async function run(): Promise<void> {
         const saveChangelog = isTrue(core.getInput(Inputs.Save) || "true");
         const sectionSuffix = core.getInput(Inputs.SectionSuffix) || "";
         const setBody = core.getInput(Inputs.Set);
-        const getRelease = core.getInput(Inputs.Get) || UNRELEASED;
+        const getBody = core.getInput(Inputs.Get) || "";
         const appendBody = core.getInput(Inputs.Append);
+        const clear = isTrue(core.getInput(Inputs.Clear) || "false");
         const sanitize = isTrue(core.getInput(Inputs.Sanitize) || "false");
         const changeLog = ChangeLog.readOrCreate(path, encoding);
         let hasChanged = false;
-        let release =
-            changeLog.getRelease(getRelease) || new Release(getRelease);
+        let release = new Release("output");
+        if (releaseName) {
+            release = changeLog.getOrCreateRelease(releaseName);
+            core.debug(`Selected release ${release.version}`);
+            hasChanged = true;
+        }
         core.debug(`Target release is ${release.version}`);
+        if (clear && !release.body.isEmpty()) {
+            core.debug(`Clearing up ${release.version}`);
+            release.body.clear();
+        }
+        if (getBody) {
+            const getRelease = changeLog.getRelease(getBody);
+            if (getRelease) {
+                core.debug(
+                    `Replacing notes in ${release.version} with notes from ${getBody}`
+                );
+                release.body.replace(getRelease.body);
+            }
+        }
         if (setBody) {
             core.debug(`Replacing notes in ${release.version}`);
             release.body = ReleaseBody.parse(setBody);
-            hasChanged = true;
         }
         if (appendBody) {
             core.debug(`Updating notes in ${release.version}`);
@@ -40,17 +57,7 @@ async function run(): Promise<void> {
                     .sanitize()
                     .addSectionSuffix(sectionSuffix)
             );
-            hasChanged = true;
             core.debug(`Updated notes in ${release.version}`);
-        }
-        if (releaseName) {
-            const newRelease = changeLog.getOrCreateRelease(releaseName);
-            core.debug(`Releasing ${newRelease.version}`);
-            newRelease.body = release.body;
-            core.debug(`Cleaning up ${release.version}`);
-            release.body = new ReleaseBody();
-            release = newRelease;
-            hasChanged = true;
         }
         if (sanitize) {
             release.body.sanitize();

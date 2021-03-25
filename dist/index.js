@@ -493,6 +493,7 @@ var Inputs;
     Inputs["SectionSuffix"] = "suffix";
     Inputs["Save"] = "save";
     Inputs["Sanitize"] = "sanitize";
+    Inputs["Clear"] = "clear";
 })(Inputs = exports.Inputs || (exports.Inputs = {}));
 var Outputs;
 (function (Outputs) {
@@ -580,17 +581,33 @@ function run() {
             const saveChangelog = isTrue(core.getInput(constants_1.Inputs.Save) || "true");
             const sectionSuffix = core.getInput(constants_1.Inputs.SectionSuffix) || "";
             const setBody = core.getInput(constants_1.Inputs.Set);
-            const getRelease = core.getInput(constants_1.Inputs.Get) || constants_1.UNRELEASED;
+            const getBody = core.getInput(constants_1.Inputs.Get) || "";
             const appendBody = core.getInput(constants_1.Inputs.Append);
+            const clear = isTrue(core.getInput(constants_1.Inputs.Clear) || "false");
             const sanitize = isTrue(core.getInput(constants_1.Inputs.Sanitize) || "false");
             const changeLog = changelog_1.default.readOrCreate(path, encoding);
             let hasChanged = false;
-            let release = changeLog.getRelease(getRelease) || new release_1.default(getRelease);
+            let release = new release_1.default("output");
+            if (releaseName) {
+                release = changeLog.getOrCreateRelease(releaseName);
+                core.debug(`Selected release ${release.version}`);
+                hasChanged = true;
+            }
             core.debug(`Target release is ${release.version}`);
+            if (clear && !release.body.isEmpty()) {
+                core.debug(`Clearing up ${release.version}`);
+                release.body.clear();
+            }
+            if (getBody) {
+                const getRelease = changeLog.getRelease(getBody);
+                if (getRelease) {
+                    core.debug(`Replacing notes in ${release.version} with notes from ${getBody}`);
+                    release.body.replace(getRelease.body);
+                }
+            }
             if (setBody) {
                 core.debug(`Replacing notes in ${release.version}`);
                 release.body = releaseBody_1.default.parse(setBody);
-                hasChanged = true;
             }
             if (appendBody) {
                 core.debug(`Updating notes in ${release.version}`);
@@ -600,17 +617,7 @@ function run() {
                 release.body.merge(releaseBody_1.default.parse(appendBody)
                     .sanitize()
                     .addSectionSuffix(sectionSuffix));
-                hasChanged = true;
                 core.debug(`Updated notes in ${release.version}`);
-            }
-            if (releaseName) {
-                const newRelease = changeLog.getOrCreateRelease(releaseName);
-                core.debug(`Releasing ${newRelease.version}`);
-                newRelease.body = release.body;
-                core.debug(`Cleaning up ${release.version}`);
-                release.body = new releaseBody_1.default();
-                release = newRelease;
-                hasChanged = true;
             }
             if (sanitize) {
                 release.body.sanitize();
@@ -776,9 +783,23 @@ class ReleaseBody {
         this.postfix = "";
         return this;
     }
+    clear() {
+        this.sanitize();
+        this.getExistingSections().forEach(section => (section.body = ""));
+        return this;
+    }
     merge(other) {
         this.prefix = utils_1.joinText("\n", this.prefix, other.prefix);
         this.postfix = utils_1.joinText("\n", this.postfix, other.postfix);
+        other.sections.map(section => {
+            this.getSection(section.title).appendLines(section.body);
+        });
+        return this;
+    }
+    replace(other) {
+        this.clear();
+        this.prefix = other.prefix;
+        this.postfix = other.postfix;
         other.sections.map(section => {
             this.getSection(section.title).appendLines(section.body);
         });

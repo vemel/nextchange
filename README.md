@@ -19,13 +19,14 @@ Create a workflow `.yml` file in your repositories `.github/workflows` directory
 | Name | Default | Description |
 | - | - | - |
 | `path` | `"./CHANGELOG.md"` | Path to `CHANGELOG.md` file |
-| `get` | `"Unreleased"` | Get target release by its version |
-| `release` | `""` | If provided, create a new release with given version from target release |
-| `set` | `""` | Fully replace target release notes |
-| `append` | `""` | Append new lines to target release notes |
+| `release` | `""` | Get or create a release to edit, set it as target |
+| `clear` | `false` | Delete everything from target release notes if it exists and not empty |
+| `get` | `""` | Replace target release notes with notes of release provided here, e.g. `Undefined` |
+| `set` | `""` | Fully replace target release notes with parameter value |
+| `append` | `""` | Append new lines to target release notes from parameter value |
 | `suffix` | `""` | Add suffix to each section of `append` notes, good for pasting a link to PR |
 | `save` | `true` | Whether to save changes back to `CHANGELOG.md` path |
-| `sanitize` | `false` | Keep only `Keep a Changelog` sections in release notes |
+| `sanitize` | `false` | Keep only `Keep a Changelog` sections in target release notes |
 | `encoding` | `"utf-8"` | Encoding for `CHANGELOG.md` |
 
 ### Outputs

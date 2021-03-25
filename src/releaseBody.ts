@@ -103,9 +103,25 @@ export default class ReleaseBody {
         return this;
     }
 
+    clear(): ReleaseBody {
+        this.sanitize();
+        this.getExistingSections().forEach(section => (section.body = ""));
+        return this;
+    }
+
     merge(other: ReleaseBody): ReleaseBody {
         this.prefix = joinText("\n", this.prefix, other.prefix);
         this.postfix = joinText("\n", this.postfix, other.postfix);
+        other.sections.map(section => {
+            this.getSection(section.title).appendLines(section.body);
+        });
+        return this;
+    }
+
+    replace(other: ReleaseBody): ReleaseBody {
+        this.clear();
+        this.prefix = other.prefix;
+        this.postfix = other.postfix;
         other.sections.map(section => {
             this.getSection(section.title).appendLines(section.body);
         });
