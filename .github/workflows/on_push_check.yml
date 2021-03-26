@@ -1,0 +1,64 @@
+# This workflow provided by GitHubActions.js
+# Documentation: https://github.com/vemel/github_actions_js
+
+name: Run code style checks and unit tests
+
+on:
+  push: {}
+  workflow_dispatch: {}
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Get available scripts
+        id: scripts
+        uses: actions/github-script@v3
+        with:
+          script: |
+            const { promisify } = require('util');
+            const exec = promisify(require('child_process').exec);
+
+            // Script to run linting
+            const lintScript = 'lint';
+
+            // Script to run unit tests
+            const testScript = 'test';
+
+            const output = (await exec('npm run')).stdout;
+            const scripts = output.split(/\r?\n/)
+              .filter(line => line.startsWith('  ') && !line.startsWith('   '))
+              .map(line => line.trim());
+
+            let result = undefined;
+            if (scripts.includes(lintScript)) {
+              core.setOutput('lint', lintScript);
+              result = true;
+            }
+            if (scripts.includes(testScript)) {
+              core.setOutput('test', testScript);
+              result = true;
+            }
+            return result;
+      - uses: actions/cache@v2
+        if: "steps.scripts.outputs.result"
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: Install package
+        if: "steps.scripts.outputs.result"
+        run: |
+          npm install
+      - name: Run linting
+        if: "steps.scripts.outputs.lint"
+        run: |
+          echo "Running: npm run ${{ steps.scripts.outputs.lint }}"
+          npm run ${{ steps.scripts.outputs.lint }}
+      - name: Run tests
+        if: "steps.scripts.outputs.test"
+        run: |
+          echo "Running: npm run ${{ steps.scripts.outputs.test }}"
+          npm run ${{ steps.scripts.outputs.test }}

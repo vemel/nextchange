@@ -1,6 +1,6 @@
 import fs from "fs";
 
-import { ENCODING, HEADER, UNRELEASED } from "./constants";
+import { HEADER, UNRELEASED, UTF8 } from "./constants";
 import Release from "./release";
 import ReleaseBody from "./releaseBody";
 import { trimDedent } from "./utils";
@@ -37,7 +37,7 @@ export default class ChangeLog {
         return result;
     }
 
-    static read(path: string, encoding = ENCODING): ChangeLog {
+    static read(path: string, encoding = UTF8): ChangeLog {
         let text = fs.readFileSync(path, { encoding });
         let isCRLF = false;
         if (text.includes("\r\n")) {
@@ -74,15 +74,15 @@ export default class ChangeLog {
             .join("\n\n");
     }
 
-    write(path: string, encoding = ENCODING): void {
-        let text = this.render();
+    write(path: string, encoding = UTF8): void {
+        let text = this.render() + "\n";
         if (this.isCRLF) {
             text = text.replace(/\r?\n/g, "\r\n");
         }
         fs.writeFileSync(path, text, { encoding });
     }
 
-    static readOrCreate(path: string, encoding = ENCODING): ChangeLog {
+    static readOrCreate(path: string, encoding = UTF8): ChangeLog {
         if (!fs.existsSync(path)) return new ChangeLog(HEADER);
         return ChangeLog.read(path, encoding);
     }

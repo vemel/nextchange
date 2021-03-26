@@ -1,7 +1,7 @@
 import * as core from "@actions/core";
 
 import ChangeLog from "./changelog";
-import { ENCODING, Inputs, Outputs } from "./constants";
+import { Inputs, Outputs, UTF8 } from "./constants";
 import Release from "./release";
 import ReleaseBody from "./releaseBody";
 
@@ -12,7 +12,7 @@ function isTrue(value: string): boolean {
 async function run(): Promise<void> {
     try {
         const path = core.getInput(Inputs.Path) || "./CHANGELOG.md";
-        const encoding = core.getInput(Inputs.Encoding) || ENCODING;
+        const encoding = core.getInput(Inputs.Encoding) || UTF8;
         const releaseName = core.getInput(Inputs.Release);
         const saveChangelog = isTrue(core.getInput(Inputs.Save) || "true");
         const sectionSuffix = core.getInput(Inputs.SectionSuffix) || "";
