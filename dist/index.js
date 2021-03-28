@@ -423,7 +423,7 @@ class ChangeLog {
         const result = new ChangeLog(utils_1.trimDedent(header), unreleased, released);
         return result;
     }
-    static read(path, encoding = constants_1.ENCODING) {
+    static read(path, encoding = constants_1.UTF8) {
         let text = fs_1.default.readFileSync(path, { encoding });
         let isCRLF = false;
         if (text.includes("\r\n")) {
@@ -458,14 +458,14 @@ class ChangeLog {
             .filter(x => x)
             .join("\n\n");
     }
-    write(path, encoding = constants_1.ENCODING) {
-        let text = this.render();
+    write(path, encoding = constants_1.UTF8) {
+        let text = this.render() + "\n";
         if (this.isCRLF) {
             text = text.replace(/\r?\n/g, "\r\n");
         }
         fs_1.default.writeFileSync(path, text, { encoding });
     }
-    static readOrCreate(path, encoding = constants_1.ENCODING) {
+    static readOrCreate(path, encoding = constants_1.UTF8) {
         if (!fs_1.default.existsSync(path))
             return new ChangeLog(constants_1.HEADER);
         return ChangeLog.read(path, encoding);
@@ -481,7 +481,7 @@ exports.default = ChangeLog;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.ENCODING = exports.HEADER = exports.UNRELEASED = exports.SECTION_TITLES = exports.Labels = exports.SectionTitles = exports.Outputs = exports.Inputs = void 0;
+exports.UTF8 = exports.HEADER = exports.UNRELEASED = exports.SECTION_TITLES = exports.Labels = exports.SectionTitles = exports.Outputs = exports.Inputs = void 0;
 var Inputs;
 (function (Inputs) {
     Inputs["Path"] = "path";
@@ -523,7 +523,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).`;
-exports.ENCODING = "utf-8";
+exports.UTF8 = "utf-8";
 
 
 /***/ }),
@@ -576,7 +576,7 @@ function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const path = core.getInput(constants_1.Inputs.Path) || "./CHANGELOG.md";
-            const encoding = core.getInput(constants_1.Inputs.Encoding) || constants_1.ENCODING;
+            const encoding = core.getInput(constants_1.Inputs.Encoding) || constants_1.UTF8;
             const releaseName = core.getInput(constants_1.Inputs.Release);
             const saveChangelog = isTrue(core.getInput(constants_1.Inputs.Save) || "true");
             const sectionSuffix = core.getInput(constants_1.Inputs.SectionSuffix) || "";
