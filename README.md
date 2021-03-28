@@ -8,6 +8,7 @@ Parse and update `CHANGELOG.md` action
     - [Inputs](#inputs)
     - [Outputs](#outputs)
   - [Examples](#examples)
+    - [Easy CI/CD for JavaScript/TypeScript and Python projects](#easy-cicd-for-javascripttypescript-and-python-projects)
   - [Contributing](#contributing)
   - [License](#license)
 
@@ -36,13 +37,9 @@ Create a workflow `.yml` file in your repositories `.github/workflows` directory
 | `label` | `"minor"` | Release label based on release notes: `major`, `minor`, or `patch` |
 | `titles` | `"added,removed,fixed"` | Comma-separated `Keep a Changelog` titles from release notes |
 
-
 ## Examples
-- [Python: Bump version on demand](examples/python-on-demand.yml)
-- [Python: Bump version on release published](examples/python-on-release-published.yml)
-- [Node.js: Bump version on demand](examples/nodejs-on-demand.yml)
-- [Node.js: Bump version on release published](examples/pnodejs-on-release-published.yml)
-
+### Easy CI/CD for JavaScript/TypeScript and Python projects
+https://github.com/vemel/github_actions_js/
 
 ## Contributing
 I would love for you to contribute to `actions/nextchange`, pull requests are welcome! Please see the [CONTRIBUTING.md](CONTRIBUTING.md) for more information.

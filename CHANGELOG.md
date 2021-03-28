@@ -7,9 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - `clear` input parameter
+- `sanitize` input parameter
 
 ### Changed
 - `get` input parameter no longer sets release as target
+- `suffix` is added onyl to `append` note sections
 
 ### Fixed
 - Added ending newline to rendered `CHANGELOG.md`
+- Allow passing `false` values as parameters
+
+## [0.0.1]
+Initial release

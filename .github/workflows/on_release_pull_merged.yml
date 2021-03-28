@@ -1,30 +1,47 @@
-# This workflow provided by GitHubActions.js
+# This workflow provided by GitHubActions.js project
 # Documentation: https://github.com/vemel/github_actions_js
+#
+# --- How to modify this workflow and still get updates ---
+# - Set 'github-actions-managed' to false on manual edit to prevent step overwrite on update
+# - User-added steps survive update as well
+# - Deleted steps are restored on update, so make them empty instead of removing
+# - Do not add multiple jobs, only one job is supported
+# - This comment is user-editable and is not updated automatically
 
-name: Publish to NPM on Release Pull Request merged
-
-on:
+name: Publish to NPM
+"on":
   pull_request:
-    types: [closed]
-  # remove manual dispatch if you do not need it
+    types:
+      - closed
   workflow_dispatch:
-    number:
-      description: "Pull Request number"
-      required: true
-
+    inputs:
+      number:
+        description: Pull Request number
+        required: true
 jobs:
   publish-to-npm:
-    if: "secrets.NPM_TOKEN"
     runs-on: ubuntu-latest
     steps:
-      - name: Get Pull Request
+      - name: Check Secrets
+        id: secrets
         uses: actions/github-script@v3
-        id: pull-request
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         with:
+          github-actions-managed: true
+          script: |
+            process.env.NPM_TOKEN && core.setOutput("NPM_TOKEN", true);
+      - name: Get Pull Request
+        id: pull-request
+        if: steps.secrets.outputs.NPM_TOKEN
+        uses: actions/github-script@v3
+        with:
+          github-actions-managed: true
           script: |
             let pullRequest = null;
-            if (context.inputs && context.inputs.number) {
+            if (context.payload.inputs && context.payload.inputs.number) {
               // find Pull Request by number fom input
+              const number = context.payload.inputs.number;
               try {
                 pullRequest = (await github.pulls.get({
                   owner: context.repo.owner,
@@ -37,7 +54,12 @@ jobs:
               }
             } else {
               // get Pull Request from event payload
-              pullRequest = context.payload;
+              pullRequest = context.payload.pull_request;
+            }
+
+            if (!pullRequest) {
+              core.error(`Cannot find Pull Request`);
+              return;
             }
 
             // Stop if Pull request is not merged
@@ -48,7 +70,7 @@ jobs:
 
             // Stop if Pull Request branch name starts with `release`
             const branch = pullRequest.head.ref;
-            if (!branch.startswith('release')) {
+            if (!branch.startsWith('release')) {
               core.info(`This is not a release branch ${branch}, skipping`);
               return;
             }
@@ -60,21 +82,19 @@ jobs:
             core.setOutput('body', pullRequest.body);
             core.setOutput('suffix', `[#${pullRequest.number}](${pullRequest.html_url})`);
             return true;
-      # Switch to Pull Request base branch
       - name: Checkout Pull Request base branch
-        if: "steps.pull-request.outputs.result"
+        id: checkout
+        if: steps.pull-request.outputs.result
         uses: actions/checkout@v2
         with:
+          github-actions-managed: true
           ref: ${{ steps.pull-request.outputs.base }}
-      - uses: actions/setup-node@v2
-        if: "steps.pull-request.outputs.result"
-        with:
-          node-version: 12
-          registry-url: https://registry.npmjs.org/
       - name: Get available scripts
         id: scripts
+        if: steps.pull-request.outputs.result
         uses: actions/github-script@v3
         with:
+          github-actions-managed: true
           script: |
             const { promisify } = require('util');
             const exec = promisify(require('child_process').exec);
@@ -89,19 +109,33 @@ jobs:
 
             core.setOutput('build', scripts.includes(buildScript) ? buildScript : '');
             return true;
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        id: setup-node
+        if: steps.pull-request.outputs.result
+        with:
+          github-actions-managed: true
+          registry-url: https://registry.npmjs.org/
+          node-version: 14
       - name: Install package
-        if: "steps.pull-request.outputs.result"
+        id: install
+        if: steps.pull-request.outputs.result
         run: |
-          npm install
+          # github-actions-managed: true
+          npm install -g npm
+          npm ci
       - name: Build package
-        if: "steps.pull-request.outputs.result && steps.scripts.outputs.build"
+        id: build
+        if: steps.pull-request.outputs.result && steps.scripts.outputs.build
         run: |
+          # github-actions-managed: true
           echo "Running: npm run ${{ steps.scripts.outputs.build }}"
           npm run ${{ steps.scripts.outputs.build }}
-      # publish to NPM if NPM_TOKEN secret is set
       - name: Publish new version to NPM
-        if: "steps.pull-request.outputs.result"
+        id: publish
+        if: steps.pull-request.outputs.result
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          npm publish --access public
+          # github-actions-managed: true
+          npm publish --access public --verbose
