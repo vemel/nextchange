@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - `get` input parameter no longer sets release as target
-- `suffix` is added onyl to `append` note sections
+- `suffix` is added only to `append` note sections
 
 ### Fixed
 - Added ending newline to rendered `CHANGELOG.md`
