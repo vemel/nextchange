@@ -4,7 +4,11 @@ export default class ChangeLog {
     unreleased: Release;
     releases: Array<Release>;
     isCRLF: boolean;
-    constructor(header?: string, unreleased?: Release, releases?: Array<Release>);
+    constructor(
+        header?: string,
+        unreleased?: Release,
+        releases?: Array<Release>
+    );
     static parse(text: string): ChangeLog;
     static read(path: string, encoding?: string): ChangeLog;
     getRelease(version: string): Release | null;

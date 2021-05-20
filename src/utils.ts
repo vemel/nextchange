@@ -17,7 +17,7 @@ export function dedent(text: string): string {
     for (const line of lines) {
         const lineOffset = line.length - line.trimLeft().length;
         if (firstLine) {
-            if (lineOffset) offset = lineOffset;
+            if (line.length) offset = lineOffset;
             firstLine = false;
             continue;
         }

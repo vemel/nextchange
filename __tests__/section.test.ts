@@ -14,7 +14,9 @@ test("append", () => {
 
 test("append lines", () => {
     expect(new Section("added").appendLines("body").body).toBe("body");
-    expect(new Section("added").appendLines("\n\nbody\n").body).toBe("body");
+    expect(new Section("added").appendLines("\n\nbody\n  second\n").body).toBe(
+        "body\n  second"
+    );
     expect(
         new Section("added").appendLines("body").appendLines("2\n").body
     ).toBe("body\n2");

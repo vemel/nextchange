@@ -5,7 +5,8 @@ test("dedent", () => {
     expect(dedent("test")).toBe("test");
     expect(dedent("  test")).toBe("test");
     expect(dedent("  test\n  test2")).toBe("test\ntest2");
-    expect(dedent("test\n  test2")).toBe("test\ntest2");
+    expect(dedent("\n  test2")).toBe("\ntest2");
+    expect(dedent("test\n  test2")).toBe("test\n  test2");
     expect(dedent(" test\n  test2")).toBe("test\n test2");
     expect(dedent("   test\n  test2")).toBe(" test\ntest2");
     expect(dedent("   test\n test2\n  test3")).toBe("  test\ntest2\n test3");
